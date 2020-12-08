@@ -10,7 +10,7 @@ authRoutes.post("/signup", (req, res, next) => {
   const { name, lastName, username, email, password } = req.body;
 
   if (!name || !lastName || !username || !email || !password) {
-    res.send({ message: "Provide all the fields" });
+    res.send({message: "You have to complete all Provide all the fields"});
     return;
   }
 
