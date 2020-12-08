@@ -10,18 +10,18 @@ authRoutes.post("/signup", (req, res, next) => {
   const { name, lastName, username, email, password } = req.body;
 
   if (!name || !lastName || !username || !email || !password) {
-    res.status(400).json({ message: "Provide username and password" });
+    res.send({ message: "Provide all the fields" });
     return;
   }
 
   User.findOne({ email }, (err, foundUser) => {
     if (err) {
-      res.status(500).json({ message: "Email check went bad." });
+      res.status(500).send({ message: "Email check went bad." });
       return;
     }
 
     if (foundUser) {
-      res.status(400).json({ message: "Email taken. Choose another one." });
+      res.status(400).send({ message: "Email already in use. Please, choose another one or login." });
       return;
     }
 
