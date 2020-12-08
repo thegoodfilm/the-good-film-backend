@@ -56,15 +56,19 @@ authRoutes.post("/signup", (req, res, next) => {
   });
 });
 
-authRoutes.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true,
-    passReqToCallback: true,
-  })
-);
+authRoutes.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, theUser, failureDetails) => {
+      if (err) {
+          res.status(500).json({ message: 'Error authenticating user' });
+          return;
+      }
+      if (!theUser) {
+          res.status(401).json(failureDetails);
+          return;
+      }
+      req.login(theUser, err => err ? res.status(500).json({ message: 'Session error' }) : res.status(200).json(theUser))
+  })(req, res, next)
+})
 
 authRoutes.post("/logout", (req, res, next) => {
   req.logout();

@@ -100,7 +100,7 @@ app.use(flash());
 //Middleware del Strategy
 passport.use(
   new LocalStrategy(
-    { passReqToCallback: true },
+    { passReqToCallback: true, usernameField: 'email', passwordField: `password` },
     (req, email, password, next) => {
       User.findOne({ email })
         .then((user) => {
