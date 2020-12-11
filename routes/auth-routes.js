@@ -10,7 +10,7 @@ authRoutes.post("/signup", (req, res, next) => {
   const { name, lastName, username, email, password } = req.body;
 
   if (!name || !lastName || !username || !email || !password) {
-    res.send({message: "You have to complete all Provide all the fields"});
+    res.send({message: "You have to complete all the fields"});
     return;
   }
 
@@ -21,7 +21,7 @@ authRoutes.post("/signup", (req, res, next) => {
     }
 
     if (foundUser) {
-      res.status(400).send({ message: "Email already in use. Please, choose another one or login." });
+      res.send({ message: "Email already in use. Please, choose another one or login." });
       return;
     }
 
