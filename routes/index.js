@@ -88,10 +88,21 @@ router.post('/myaccount/activity', (req, res)=>{
 })
 
 
+router.post(
+  "/myaccount/activity/:id/delete",
+  (req, res, next) => {
+    const id = req.params.id;
+    User.findByIdAndRemove(id)
+      .then(() => {
+        res.send({ message: "Deleted from my activity" });      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+);
 
 
-
-router.get('/myaccount/myprofile', (req, res)=>{
+router.get('/getUser/:id', (req, res)=>{
 
   User.findById(req.params.id)
   .then((result)=>{
@@ -102,21 +113,30 @@ router.get('/myaccount/myprofile', (req, res)=>{
   })
 })
 
+// router.get('/myaccount/mylists', (req, res)=>{
 
+//   User.findById(req.params.id)
+//   .then((result)=>{
+//     res.send(result)
+//   })
+//   .catch((err)=>{
+//     console.log(err)
+//   })
+// })
 
 
 
 
 /* GET: Ver todos los usuarios */
-router.get('/all-users', (req, res)=>{
-  User.find({})
-  .then((result)=>{
-    res.send(result)
-  })
-  .catch((err)=>{
-    res.send(err)
-  })
-})
+// router.get('/all-users', (req, res)=>{
+//   User.find({})
+//   .then((result)=>{
+//     res.send(result)
+//   })
+//   .catch((err)=>{
+//     res.send(err)
+//   })
+// })
 
 
 
