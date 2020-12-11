@@ -9,102 +9,89 @@ router.get('/', (req, res, next) => {
 
 
 
-router.post('/favourites', (req, res)=>{
- const newFavourite = req.body.favourites;
-console.log(favourites)
-  User.findOne({ newFavourite}, (foundFavourite) => {
 
-console.log(foundFavourite)
-	if (foundFavourite) {
+router.post('/myaccount/favourites', (req, res)=>{
 
-	res.send({ message: 'You already have this movie in your favourites.' });
-			return
-		} if(err){
+  User.findOne({ favourites: req.body.movieID}, function(err, favourite){
+      if (err) {
+        console.log('post error: ', err)
+        }
+      else if (favourite) {
+        console.log("already exsist")
+        res.send({ message: "You already have this movie on your favourites" });
 
-      User.findByIdAndUpdate(req.body.userID, {$push: {favourites: req.body.movieID}})
-      .then((result)=>{
-        console.log(result)
-        console.log('hola')
-      })
-      .catch((err)=>{
-        console.log(err)
-      })
-      
-    }
-  
-})})
-
-
-
-
-// router.post('/favourites', (req, res)=>{
-//   const newFavourite = req.body.favourites;
-// console.log(favourites)
-//   User.findOne({ favourites: newFavourite}, (err, foundFavourite) => {
-
-
-// 		if (foundFavourite) {
-//       console.log('hola')
-// 			res.send({ message: 'You already have this movie in your favourites.' });
-// 			return
-// 		} if(err){
-
-//       User.findByIdAndUpdate(req.body.userID, {$push: {favourites: req.body.movieID}})
-//       .then((result)=>{
-//         console.log(result)
-//         console.log('hola')
-//       })
-//       .catch((err)=>{
-//         console.log(err)
-//       })
-      
-//     }
-  
-// })})
-
-router.post('/favourites', (req, res)=>{
-  User.findByIdAndUpdate(req.body.userID, {$push: {favourites: req.body.movieID}})
-  .then((result)=>{
-    console.log(result)
-  })
-  .catch((err)=>{
-    console.log(err)
+      }
+      else {
+        User.findByIdAndUpdate(req.body.userID, {$push: {favourites: req.body.movieID}})
+              .then((result)=>{
+                console.log(result)
+                res.send({ message: "Added to your favourites" });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+       
+      }
   })
 })
 
 
-router.post('/watchlist', (req, res)=>{
-  User.findByIdAndUpdate(req.body.userID, {$push: {watchlist: req.body.movieID}})
-  .then((result)=>{
-    console.log(result)
-  })
-  .catch((err)=>{
-    console.log(err)
-  })
-})
+router.post('/myaccount/watchlist', (req, res)=>{
 
-router.post('/activity', (req, res)=>{
-  User.findByIdAndUpdate(req.body.userID, {$push: {activity: req.body.movieID}})
-  .then((result)=>{
-    console.log(result)
-  })
-  .catch((err)=>{
-    console.log(err)
-  })
-})
+  User.findOne({ watchlist: req.body.movieID}, function(err, watchlist){
+      if (err) {
+        console.log('post error: ', err)
+        }
+      else if (watchlist) {
+        console.log("already exsist")
+        res.send({ message: "You already have this movie on your watchlist" });
 
-router.post('/ratings', (req, res)=>{
-  User.findByIdAndUpdate(req.body.userID, {$push: {ratings: req.body.movieID}})
-  .then((result)=>{
-    console.log(result)
-  })
-  .catch((err)=>{
-    console.log(err)
+      }
+      else {
+        User.findByIdAndUpdate(req.body.userID, {$push: {watchlist: req.body.movieID}})
+              .then((result)=>{
+                console.log(result)
+                res.send({ message: "Added to your watchlist" });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+       
+      }
   })
 })
 
 
-router.get('/myprofile/:id', (req, res)=>{
+router.post('/myaccount/activity', (req, res)=>{
+
+  User.findOne({ activity: req.body.movieID}, function(err, activity){
+      if (err) {
+        console.log('post error: ', err)
+        }
+      else if (activity) {
+        console.log("already exsist")
+        res.send({ message: "You already have this movie on your activity" });
+
+      }
+      else {
+        User.findByIdAndUpdate(req.body.userID, {$push: {activity: req.body.movieID}})
+              .then((result)=>{
+                console.log(result)
+                res.send({ message: "Added to your activity" });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+       
+      }
+  })
+})
+
+
+
+
+
+router.get('/myaccount/myprofile', (req, res)=>{
 
   User.findById(req.params.id)
   .then((result)=>{
