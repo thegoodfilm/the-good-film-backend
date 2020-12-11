@@ -19,7 +19,7 @@ const User = require("./models/User");
 mongoose
   .connect(
     `mongodb+srv://${process.env.NAME}:${process.env.PASSWORD}@cluster0.8bko9.mongodb.net/${process.env.DATABASE}?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
   )
   .then((x) => {
     console.log(
