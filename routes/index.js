@@ -88,15 +88,20 @@ router.post('/myaccount/activity', (req, res)=>{
 })
 
 
+
+
+
 router.post(
-  "/myaccount/activity/:id/delete",
+  "/myaccount/activity/:id/remove",
   (req, res, next) => {
     const id = req.params.id;
-    User.findByIdAndRemove(id)
+    User.findByIdAndDelete(id)
       .then(() => {
-        res.send({ message: "Deleted from my activity" });      })
+        res.send({ message: "Removed" });
+      })
       .catch((err) => {
         console.log(err);
+        res.render("error");
       });
   }
 );
@@ -112,46 +117,5 @@ router.get('/getUser/:id', (req, res)=>{
     console.log(err)
   })
 })
-
-// router.get('/myaccount/mylists', (req, res)=>{
-
-//   User.findById(req.params.id)
-//   .then((result)=>{
-//     res.send(result)
-//   })
-//   .catch((err)=>{
-//     console.log(err)
-//   })
-// })
-
-
-
-
-/* GET: Ver todos los usuarios */
-// router.get('/all-users', (req, res)=>{
-//   User.find({})
-//   .then((result)=>{
-//     res.send(result)
-//   })
-//   .catch((err)=>{
-//     res.send(err)
-//   })
-// })
-
-
-
-/* PUT: Editar usuario */
-
-/* PUT: Editar Leidos */
-
-/* PUT: Editar Leyendo */
-
-/* PUT: Editar Por Leer */
-
-/* DELETE: Eliminar usuario */
-
-
-
-
 
 module.exports=router
