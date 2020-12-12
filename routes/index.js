@@ -1,5 +1,8 @@
 const express = require('express');
 const User = require('../models/User');
+const Diary = require('../models/Diary');
+const { populate } = require("../models/User");
+
 const router  = express.Router();
 
 /* GET home page */
@@ -90,6 +93,37 @@ router.post('/myaccount/activity', (req, res)=>{
 
 
 
+router.get('/account/:movieID?titleID', (req, res, next) => {
+  const movieID = req.params.movieID
+
+  Diary.find({movieID: movieID})
+      .then(diary => {
+          res.status(200).json(diary)
+      })
+      .catch(err => {
+          console.error(err)
+          res.json(err)
+      })
+})
+router.post('/account/mydiary/:movieID?:titleID', (req, res, next) => {
+  const user = req.user
+  const movieID = req.params.movieID
+  const movieTitle= req.params.titleID
+  const {date, place, people, mood, notes} = req.body
+  
+  const newDiary = {movieID,movieTitle,date:date, place:place, people:people, mood: mood,notes: notes, userId: user._id
+  }
+  Diary.create(newDiary)
+      .then(newDiary => {
+          Diary.findOneAndUpdate({ _id: movieID }, {$push: {movieID: newDiary._id}})
+          res.status(200).json(newDiary)
+      })
+      .catch(err => {
+          console.error(err)
+          res.json(err)
+      })
+})
+
 
 router.post(
   "/myaccount/activity/:id/remove",
@@ -110,6 +144,7 @@ router.post(
 router.get('/getUser/:id', (req, res)=>{
 
   User.findById(req.params.id)
+  .populate('diary')
   .then((result)=>{
     res.send(result)
   })
@@ -117,5 +152,8 @@ router.get('/getUser/:id', (req, res)=>{
     console.log(err)
   })
 })
+
+
+
 
 module.exports=router

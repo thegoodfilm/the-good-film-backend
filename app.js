@@ -15,7 +15,7 @@ const cors = require("cors");
 const flash = require("connect-flash");
 
 const User = require("./models/User");
-
+const Diary = require("./models/Diary");
 mongoose
   .connect(
     `mongodb+srv://${process.env.NAME}:${process.env.PASSWORD}@cluster0.8bko9.mongodb.net/${process.env.DATABASE}?retryWrites=true&w=majority`,

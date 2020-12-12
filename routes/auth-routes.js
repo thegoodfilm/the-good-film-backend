@@ -4,6 +4,7 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
+const { populate } = require("../models/User");
 
 authRoutes.post("/signup", (req, res, next) => {
   const { name, lastName, username, email, password } = req.body;
