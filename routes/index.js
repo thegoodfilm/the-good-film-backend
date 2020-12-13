@@ -93,7 +93,7 @@ router.post('/myaccount/activity', (req, res)=>{
 
 
 
-router.get('/account/:movieID?titleID', (req, res, next) => {
+router.get('/myaccount/diary/:movieID', (req, res, next) => {
   const movieID = req.params.movieID
 
   Diary.find({movieID: movieID})
@@ -105,18 +105,21 @@ router.get('/account/:movieID?titleID', (req, res, next) => {
           res.json(err)
       })
 })
-router.post('/account/mydiary/:movieID?:titleID', (req, res, next) => {
-  const user = req.user
+router.post('/myaccount/diary/:movieID', (req, res, next) => {
+ 
   const movieID = req.params.movieID
-  const movieTitle= req.params.titleID
-  const {date, place, people, mood, notes} = req.body
-  
-  const newDiary = {movieID,movieTitle,date:date, place:place, people:people, mood: mood,notes: notes, userId: user._id
+  const {date, place, people, notes} = req.body
+  console.log('post myaccountiary')
+  const newDiary = {movieID:movieID ,...req.body, userId: req.user._id
+  }
+  if (!movieID || !date || !place ) {
+    res.send({ message: "You have to insert date and place" });
+    return;
   }
   Diary.create(newDiary)
-      .then(newDiary => {
-          Diary.findOneAndUpdate({ _id: movieID }, {$push: {movieID: newDiary._id}})
-          res.status(200).json(newDiary)
+      .then(result => {
+          // Diary.findOneAndUpdate({ movieID: movieID }, {$push: {movieID: newDiary._id}})
+          res.status(200).json(result)
       })
       .catch(err => {
           console.error(err)
