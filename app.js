@@ -15,7 +15,6 @@ const cors = require("cors");
 const flash = require("connect-flash");
 
 const User = require("./models/User");
-const Diary = require("./models/Diary");
 mongoose
   .connect(
     `mongodb+srv://${process.env.NAME}:${process.env.PASSWORD}@cluster0.8bko9.mongodb.net/${process.env.DATABASE}?retryWrites=true&w=majority`,
@@ -53,6 +52,7 @@ app.use(
   })
 );
 
+
 //CORS middleware
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -81,6 +81,16 @@ app.use((req, res, next) => {
 app.use(
   session({ secret: "ourPassword", resave: true, saveUninitialized: true })
 );
+
+//Middleware de passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "hbs");
+app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+
 
 //Middleware para serializar al usuario
 passport.serializeUser((user, callback) => {
@@ -117,14 +127,6 @@ passport.use(
   )
 );
 
-//Middleware de passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "hbs");
-app.use(express.static(path.join(__dirname, "public")));
-app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 
 const index = require("./routes/index");
