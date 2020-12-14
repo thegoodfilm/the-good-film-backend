@@ -1,18 +1,15 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-  user: {type: Schema.ObjectId, ref: "User"}, 
-  lastName: { type: String, required: true },
-  username: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  favourites: { type: [String] },
-  watchlist: { type: [String] },
-  activity: { type: [String] },
-  ratings: { type: [String] }
+const reviewSchema = new Schema({
+ 
+  username: {type: Schema.Types.ObjectId,ref: "User"},
+  review: { type: String, required: true, unique: true },
+ 
+  owner: {type: Schema.Types.ObjectId,ref: "User"}
 });
 
-const User = mongoose.model("User", userSchema);
+const Review = mongoose.model("User", reviewSchema);
 
-module.exports = User;
+module.exports = Review;
+

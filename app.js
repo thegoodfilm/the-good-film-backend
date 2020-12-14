@@ -1,18 +1,18 @@
 require("dotenv").config();
 
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const express = require("express");
-const favicon = require("serve-favicon");
-const mongoose = require("mongoose");
-const logger = require("morgan");
-const path = require("path");
-const session = require("express-session");
-const passport = require("passport");
+const bodyParser    = require("body-parser");
+const cookieParser  = require("cookie-parser");
+const express       = require("express");
+const favicon       = require("serve-favicon");
+const mongoose      = require("mongoose");
+const logger        = require("morgan");
+const path          = require("path");
+const session       = require("express-session");
+const passport      = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcryptjs");
-const cors = require("cors");
-const flash = require("connect-flash");
+const bcrypt        = require("bcryptjs");
+const cors          = require("cors");
+const flash         = require("connect-flash");
 
 const User = require("./models/User");
 mongoose
@@ -37,13 +37,13 @@ const debug = require("debug")(
 
 const app = express();
 
-// Middleware Setup
+// MDW SETUP
 app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// Express View engine setup
+// EXPRESS VIEW SETUP
 app.use(
   require("node-sass-middleware")({
     src: path.join(__dirname, "public"),
@@ -52,8 +52,7 @@ app.use(
   })
 );
 
-
-//CORS middleware
+//CORS MDW
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -77,40 +76,42 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware de Session
+// MDW SESSION
 app.use(
   session({ secret: "ourPassword", resave: true, saveUninitialized: true })
 );
 
-//Middleware de passport
+//MDW PASSPORT
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.set("views", path.join(__dirname, "views"));
-// app.set("view engine", "hbs");
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
-
-//Middleware para serializar al usuario
+//MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {
   callback(null, user._id);
 });
 
-//Middleware para des-serializar al usuario
+//MDW UNSERIALIZER USER
 passport.deserializeUser((id, callback) => {
   User.findById(id)
     .then((user) => callback(null, user))
     .catch((err) => callback(err));
 });
 
-//Middleware de flash
+//MDW FLASH
 app.use(flash());
 
-//Middleware del Strategy
+//MDW STRATEGY
 passport.use(
   new LocalStrategy(
-    { passReqToCallback: true, usernameField: 'email', passwordField: `password` },
+    {
+      passReqToCallback: true,
+      usernameField: "email",
+      passwordField: `password`,
+    },
     (req, email, password, next) => {
       User.findOne({ email })
         .then((user) => {
@@ -127,12 +128,18 @@ passport.use(
   )
 );
 
-
-
+//ROUTES
 const index = require("./routes/index");
 app.use("/", index);
 
+const movieRoutes = require("./routes/movie-routes");
+app.use("/", movieRoutes);
+
+const diaryRoutes = require("./routes/diary-routes");
+app.use("/", diaryRoutes);
+
 const authRoutes = require("./routes/auth-routes");
 app.use("/", authRoutes);
+
 
 module.exports = app;

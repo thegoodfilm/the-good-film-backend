@@ -4,8 +4,8 @@ const passport = require("passport");
 const bcrypt = require("bcryptjs");
 
 const User = require("../models/User");
-const { populate } = require("../models/User");
 
+// POST SIGN UP
 authRoutes.post("/signup", (req, res, next) => {
   const { name, lastName, username, email, password } = req.body;
 
@@ -19,7 +19,6 @@ authRoutes.post("/signup", (req, res, next) => {
       res.status(500).send({ message: "Email check went bad." });
       return;
     }
-
     if (foundUser) {
       res.send({
         message: "Email already in use. Please, choose another one or login.",
@@ -58,6 +57,7 @@ authRoutes.post("/signup", (req, res, next) => {
   });
 });
 
+// POST LOG IN
 authRoutes.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, theUser, failureDetails) => {
     const { email, password } = req.body;
@@ -82,17 +82,30 @@ authRoutes.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+// POST LOG OUT
 authRoutes.post("/logout", (req, res, next) => {
   req.logout();
   res.status(200).json({ message: "Log out success!" });
 });
 
+// GET LOGGED IN
 authRoutes.get("/loggedin", (req, res, next) => {
   if (req.isAuthenticated()) {
     res.status(200).json(req.user);
     return;
   }
   res.json({});
+});
+
+// GET USER
+authRoutes.get("/getUser/:id", (req, res) => {
+  User.findById(req.params.id)
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 module.exports = authRoutes;
