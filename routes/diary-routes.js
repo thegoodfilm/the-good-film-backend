@@ -1,6 +1,5 @@
 const express = require("express");
 
-
 const Diary = require("../models/Diary");
 const { populate } = require("../models/User");
 const router = express.Router();
@@ -17,7 +16,7 @@ router.get("/myaccount/diary", (req, res, next) => {
     });
 });
 
-// GET MYACCOUNT/DIARY FORM
+// POST MYACCOUNT/DIARY FORM
 router.post("/myaccount/diary/:id/form", (req, res, next) => {
   const date = req.body.date;
 

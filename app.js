@@ -141,5 +141,7 @@ app.use("/", diaryRoutes);
 const authRoutes = require("./routes/auth-routes");
 app.use("/", authRoutes);
 
+const reviewRoutes = require("./routes/review-routes");
+app.use("/", reviewRoutes);
 
 module.exports = app;
