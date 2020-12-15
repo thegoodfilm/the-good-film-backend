@@ -6,7 +6,7 @@ const { populate } = require("../models/User");
 const router = express.Router();
 
 // GET REVIEWS
-router.get("/nowoncinemas/:id", (req, res, next) => {
+router.get("/review/:id", (req, res, next) => {
   console.log(req.body)
   console.log(req.match)
   console.log(req.params)
