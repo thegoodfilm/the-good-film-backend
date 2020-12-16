@@ -30,7 +30,7 @@ router.get("/nowoncinemas/:id", (req, res, next) => {
 });
 
 // POST REVIEW FORM
-router.post("/review/:id/form", (req, res, next) => {
+router.post("/nowoncinemas/:id", (req, res, next) => {
   console.log("soy post review");
   console.log(req.params);
   // const review = req.body.reviewText
