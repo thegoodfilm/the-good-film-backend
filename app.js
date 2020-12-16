@@ -72,22 +72,7 @@ app.use(
 );
 
 
-app.set('trust proxy', 1)
-app.use(cookieSession({
-    name:'session',
-    keys: ['key1', 'key2'],
-    sameSite: 'none',
-    secure: true
-}))
-app.use(session ({
-    secret: `ourPassword`,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        sameSite: 'none',
-        secure: true
-    }
-}))
+
 
 app.use((req, res, next) => {
   res.locals.user = req.user;
@@ -108,7 +93,22 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 
-
+app.set('trust proxy', 1)
+app.use(cookieSession({
+    name:'session',
+    keys: ['key1', 'key2'],
+    sameSite: 'none',
+    secure: true
+}))
+app.use(session ({
+    secret: `ourPassword`,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        sameSite: 'none',
+        secure: true
+    }
+}))
 
 //MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {
