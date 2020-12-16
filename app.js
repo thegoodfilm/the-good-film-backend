@@ -67,7 +67,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3001", "https://thegoodfilm.netlify.app"],
   })
 );
 
