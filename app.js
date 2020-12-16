@@ -100,15 +100,15 @@ app.use(cookieSession({
     sameSite: 'none',
     secure: true
 }))
-app.use(session ({
-    secret: `ourPassword`,
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        sameSite: 'none',
-        secure: true
-    }
-}))
+// app.use(session ({
+//     secret: `ourPassword`,
+//     resave: true,
+//     saveUninitialized: true,
+//     cookie: {
+//         sameSite: 'none',
+//         secure: true
+//     }
+// }))
 
 //MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {
