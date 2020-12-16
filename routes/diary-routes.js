@@ -17,7 +17,8 @@ router.get("/myaccount/diary", (req, res, next) => {
 });
 
 // POST MYACCOUNT/DIARY FORM
-router.post("/myaccount/diary/:id/form", (req, res, next) => {
+router.post("/myaccount/diary/:id", (req, res, next) => {
+  console.log(req.body)
   const date = req.body.date;
 
   if (!date) {
@@ -33,6 +34,7 @@ router.post("/myaccount/diary/:id/form", (req, res, next) => {
     notes: req.body.notes,
     owner: req.user._id,
   })
+  
     .then((response) => {
       res.json(response);
     })

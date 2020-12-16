@@ -1,20 +1,27 @@
 const express = require("express");
 
-
 const Review = require("../models/Review");
 const { populate } = require("../models/User");
 const router = express.Router();
 
 // GET REVIEWS
-router.get("/review/:id", (req, res, next) => {
-  console.log(req.body)
-  console.log(req.match)
-  console.log(req.params)
+// router.get("/review/:id", (req, res, next) => {
+// console.log(req.params.id)
+//   Review.find({id: req.params.id})
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.json(err);
+//     });
+// });
 
-    console.log('soy detreview')
-  Review.find({ movieID: req.params.movieID })
+router.get("/nowoncinemas/:id", (req, res, next) => {
+  console.log(req.params.id);
+  Review.find({ movieID: req.params.id })
     .then((result) => {
-      res.status(200).json(result);
+      res.send(result);
     })
     .catch((err) => {
       console.error(err);
@@ -24,23 +31,23 @@ router.get("/review/:id", (req, res, next) => {
 
 // POST REVIEW FORM
 router.post("/review/:id/form", (req, res, next) => {
-  const review = req.body.reviewText
+  console.log("soy post review");
+  console.log(req.params);
+  // const review = req.body.reviewText
 
-
-  if (!review) {
-    res.send({ message: "You have to insert some text" });
-    return;
-  }
+  console.log(req.user);
+  // if (!review) {
+  //   res.send({ message: "You have to insert some text" });
+  //   return;
+  // }
 
   Review.create({
-    movieID: req.body.movieID,
+    movieID: req.params.id,
     reviewText: req.body.reviewText,
-    owner: req.user._id
-   
+    username: `${req.user.username}`,
+    owner: req.user._id,
   })
     .then((response) => {
-  
-
       res.json(response);
     })
     .catch((err) => {
@@ -59,8 +66,5 @@ router.get("/getReviews/:id", (req, res) => {
       console.log(err);
     });
 });
-
-
-
 
 module.exports = router;
