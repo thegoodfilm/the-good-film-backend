@@ -13,7 +13,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const bcrypt        = require("bcryptjs");
 const cors          = require("cors");
 const flash         = require("connect-flash");
-
+const cookieSession = require('cookie-session')
 const User = require("./models/User");
 mongoose
   .connect(
@@ -93,7 +93,7 @@ app.use(cookieSession({
     secure: true
 }))
 app.use(session ({
-    secret: `ourPassword`,
+    secret: 'oursecret',
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -102,6 +102,7 @@ app.use(session ({
     }
 }))
 
+
 //MDW PASSPORT
 app.use(passport.initialize());
 app.use(passport.session());
@@ -109,6 +110,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+
 
 
 
