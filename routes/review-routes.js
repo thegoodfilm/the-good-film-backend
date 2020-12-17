@@ -17,7 +17,7 @@ const router = express.Router();
 //     });
 // });
 
-router.get("/nowoncinemas/:id", (req, res, next) => {
+router.get("/details/:id", (req, res, next) => {
   console.log(req.params.id);
   Review.find({ movieID: req.params.id })
     .then((result) => {
@@ -30,7 +30,7 @@ router.get("/nowoncinemas/:id", (req, res, next) => {
 });
 
 // POST REVIEW FORM
-router.post("/nowoncinemas/:id", (req, res, next) => {
+router.post("/details/:id", (req, res, next) => {
   console.log("soy post review");
   console.log(req.params);
   // const review = req.body.reviewText
