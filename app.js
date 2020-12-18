@@ -37,12 +37,38 @@ const debug = require("debug")(
 
 const app = express();
 
+// MDW SETUP
+app.use(logger("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
+// EXPRESS VIEW SETUP
+app.use(
+  require("node-sass-middleware")({
+    src: path.join(__dirname, "public"),
+    dest: path.join(__dirname, "public"),
+    sourceMap: true,
+  })
+);
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3001", "http://localhost:3002", "https://thegoodfilm.netlify.app"],
+  })
+);
 
-//________
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
-//PASSPORT MIDDLEWARE
+// MDW SESSION
+// app.use(
+//   session({ secret: `${process.env.SECRET}`, resave: true, saveUninitialized: true })
+// );
+
 app.set('trust proxy', 1)
 app.use(cookieSession({
     name:'session',
@@ -50,24 +76,39 @@ app.use(cookieSession({
     sameSite: 'none',
     secure: true
 }))
-app.use(session({
-  secret:"some secret goes here",
-  resave: true,
-  saveUninitialized: true
-}));
+app.use(session ({
+    secret: `oursecret`,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        sameSite: 'none',
+        secure: true
+    }
+}))
+
+//MDW PASSPORT
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(session({ secret: 'ourPassword', resave: true, saveUninitialized: true }));
-app.use(flash());
-//Middleware para serializar al usuario
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+
+//MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {
-	callback(null, user._id);
+  callback(null, user._id);
 });
-//Middleware para des-serializar al usuario
+
+//MDW UNSERIALIZER USER
 passport.deserializeUser((id, callback) => {
-	User.findById(id).then((user) => callback(null, user)).catch((err) => callback(err));
+  User.findById(id)
+    .then((user) => callback(null, user))
+    .catch((err) => callback(err));
 });
-//Middleware del Strategy
+
+//MDW FLASH
+app.use(flash());
+
+//MDW STRATEGY
 passport.use(
   new LocalStrategy(
     {
@@ -90,42 +131,6 @@ passport.use(
     }
   )
 );
-// Middleware Setup
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-// Express View engine setup
-app.use(require('node-sass-middleware')({
-  src:  path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  sourceMap: true
-}));
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
-//CORS middleware
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-//   res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-//   next();
-// });
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3001", "http://localhost:3002", "https://thegoodfilm.netlify.app"],
-  })
-);
-
-app.use((req, res, next)=>{
-  res.locals.user = req.user;
-  next();
-})
-
-
 
 //ROUTES
 const index = require("./routes/index");
