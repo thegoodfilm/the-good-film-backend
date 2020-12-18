@@ -45,6 +45,15 @@ app.use(cookieParser());
 
 
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3001", "http://localhost:3002", "https://thegoodfilm.netlify.app"],
+  })
+);
+
+
+
 // MDW SESSION
 // app.use(
 //   session({ secret: `${process.env.SECRET}`, resave: true, saveUninitialized: true })
@@ -58,7 +67,7 @@ app.use(cookieSession({
     secure: true
 }))
 app.use(session ({
-    secret: `${process.env.SECRET}`,
+    secret: `oursecret`,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -67,10 +76,19 @@ app.use(session ({
     }
 }))
 
+//MDW PASSPORT
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+app.use(session({ secret: 'ourPassword', resave: true, saveUninitialized: true }));
+app.use(flash());
+
 //MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {
   callback(null, user._id);
 });
+
 
 //MDW UNSERIALIZER USER
 passport.deserializeUser((id, callback) => {
@@ -78,49 +96,6 @@ passport.deserializeUser((id, callback) => {
     .then((user) => callback(null, user))
     .catch((err) => callback(err));
 });
-
-
-//MDW FLASH
-app.use(flash());
-
-
-
-
-
-
-// EXPRESS VIEW SETUP
-app.use(
-  require("node-sass-middleware")({
-    src: path.join(__dirname, "public"),
-    dest: path.join(__dirname, "public"),
-    sourceMap: true,
-  })
-);
-
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3001", "http://localhost:3002", "https://thegoodfilm.netlify.app"],
-  })
-);
-
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  next();
-});
-
-
-//MDW PASSPORT
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(express.static(path.join(__dirname, "public")));
-app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
-
-
-
-
-
 //MDW STRATEGY
 passport.use(
   new LocalStrategy(
@@ -144,6 +119,29 @@ passport.use(
     }
   )
 );
+
+
+
+// EXPRESS VIEW SETUP
+app.use(
+  require("node-sass-middleware")({
+    src: path.join(__dirname, "public"),
+    dest: path.join(__dirname, "public"),
+    sourceMap: true,
+  })
+);
+
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+//MDW FLASH
+app.use(flash());
+
+
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
 //ROUTES
 const index = require("./routes/index");
