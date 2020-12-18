@@ -43,6 +43,59 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+
+// MDW SESSION
+// app.use(
+//   session({ secret: `${process.env.SECRET}`, resave: true, saveUninitialized: true })
+// );
+
+app.set('trust proxy', 1)
+app.use(cookieSession({
+    name:'session',
+    keys: ['key1', 'key2'],
+    sameSite: 'none',
+    secure: true
+}))
+app.use(session ({
+    secret: `${process.env.SECRET}`,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        sameSite: 'none',
+        secure: true
+    }
+}))
+
+//MDW SERIALIZER USER
+passport.serializeUser((user, callback) => {
+  callback(null, user._id);
+});
+
+//MDW UNSERIALIZER USER
+passport.deserializeUser((id, callback) => {
+  User.findById(id)
+    .then((user) => callback(null, user))
+    .catch((err) => callback(err));
+});
+
+
+//MDW FLASH
+app.use(flash());
+
+
+//Cookies config
+app.use(session({
+  secret: `${process.env.SECRET}`,
+  cookie: { maxAge: 60000 },
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection,
+    ttl: 24 * 60 * 60 
+  })
+}));
+
+
+
 // EXPRESS VIEW SETUP
 app.use(
   require("node-sass-middleware")({
@@ -64,27 +117,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// MDW SESSION
-// app.use(
-//   session({ secret: `${process.env.SECRET}`, resave: true, saveUninitialized: true })
-// );
-
-app.set('trust proxy', 1)
-app.use(cookieSession({
-    name:'session',
-    keys: ['key1', 'key2'],
-    sameSite: 'none',
-    secure: true
-}))
-app.use(session ({
-    secret: 'oursecret',
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        sameSite: 'none',
-        secure: true
-    }
-}))
 
 //MDW PASSPORT
 app.use(passport.initialize());
@@ -93,20 +125,9 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
-//MDW SERIALIZER USER
-passport.serializeUser((user, callback) => {
-  callback(null, user._id);
-});
 
-//MDW UNSERIALIZER USER
-passport.deserializeUser((id, callback) => {
-  User.findById(id)
-    .then((user) => callback(null, user))
-    .catch((err) => callback(err));
-});
 
-//MDW FLASH
-app.use(flash());
+
 
 //MDW STRATEGY
 passport.use(
