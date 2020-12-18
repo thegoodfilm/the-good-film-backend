@@ -40,7 +40,7 @@ router.post("/myaccount/watchlist", (req, res) => {
       res.send({ message: "You already have this movie on your watchlist" });
     } else {
       User.findByIdAndUpdate(req.body.userID, {
-        $push: { watchlist: req.body.movieID },
+        $push: { watchlist: req.body.movieID }
       })
         .then((result) => {
     
