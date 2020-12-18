@@ -84,15 +84,7 @@ passport.deserializeUser((id, callback) => {
 app.use(flash());
 
 
-//Cookies config
-app.use(session({
-  secret: `${process.env.SECRET}`,
-  cookie: { maxAge: 60000 },
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection,
-    ttl: 24 * 60 * 60 
-  })
-}));
+
 
 
 
