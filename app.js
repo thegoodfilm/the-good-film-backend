@@ -77,7 +77,7 @@ app.use(cookieSession({
     secure: true
 }))
 app.use(session ({
-    secret: `${process.env.SECRET}`,
+    secret: 'oursecret',
     resave: true,
     saveUninitialized: true,
     cookie: {
