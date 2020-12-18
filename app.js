@@ -52,27 +52,12 @@ app.use(
   })
 );
 
-//CORS MDW
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method"
-//   );
-//   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-//   res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
-//   next();
-// });
-
 app.use(
   cors({
     credentials: true,
     origin: ["http://localhost:3001", "http://localhost:3002", "https://thegoodfilm.netlify.app"],
   })
 );
-
-
-
 
 app.use((req, res, next) => {
   res.locals.user = req.user;
@@ -81,9 +66,8 @@ app.use((req, res, next) => {
 
 // MDW SESSION
 // app.use(
-//   session({ secret: "ourPassword", resave: true, saveUninitialized: true })
+//   session({ secret: `${process.env.SECRET}`, resave: true, saveUninitialized: true })
 // );
-
 
 app.set('trust proxy', 1)
 app.use(cookieSession({
@@ -93,7 +77,7 @@ app.use(cookieSession({
     secure: true
 }))
 app.use(session ({
-    secret: 'oursecret',
+    secret: `${process.env.SECRET}`,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -102,17 +86,12 @@ app.use(session ({
     }
 }))
 
-
 //MDW PASSPORT
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 app.use(express.static(path.join(__dirname, "public")));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
-
-
-
 
 //MDW SERIALIZER USER
 passport.serializeUser((user, callback) => {

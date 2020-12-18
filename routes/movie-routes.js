@@ -7,20 +7,20 @@ const router = express.Router();
 router.post("/myaccount/favourites", (req, res) => {
   User.findOne({ favourites: req.body.movieID, _id: req.body.userID })
     .then((result) => {
-      console.log(result);
+     
       if (result === null) {
         User.findByIdAndUpdate(req.body.userID, {
           $push: { favourites: req.body.movieID },
         })
           .then((result) => {
-            console.log(result);
+          
             res.send({ message: "Added to your favourites" });
           })
           .catch((err) => {
             console.log(err);
           });
       } else {
-        console.log("already exist");
+    
 
         res.send({ message: "You already have this movie on your favourites" });
       }
@@ -43,7 +43,7 @@ router.post("/myaccount/watchlist", (req, res) => {
         $push: { watchlist: req.body.movieID },
       })
         .then((result) => {
-          console.log(result);
+    
           res.send({ message: "Added to your watchlist" });
         })
         .catch((err) => {

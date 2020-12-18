@@ -18,11 +18,15 @@ router.get("/myaccount/diary", (req, res, next) => {
 
 // POST MYACCOUNT/DIARY FORM
 router.post("/myaccount/diary/:id", (req, res, next) => {
-  console.log(req.body)
-  const date = req.body.date;
 
-  if (!date) {
-    res.send({ message: "You have to insert date" });
+  const movieID = req.body.movieID;
+  const date = req.body.date;
+  const place = req.body.place;
+  const people = req.body.people;
+  const notes = req.body.notes;
+
+  if (!movieID || !date || !place || !people || !notes) {
+    res.send({ message: "You have to complete all the fields" });
     return;
   }
 
@@ -54,5 +58,7 @@ router.get("/getDiary/:id", (req, res) => {
       console.log(err);
     });
 });
+
+
 
 module.exports = router;
